@@ -15,7 +15,7 @@ const NavigateCard = () => {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={tw`bg-white flex-1`}>
+    <SafeAreaView style={tw`bg-white`}>
       <Text style={tw`text-center pt-3 pb-4 text-xl`}>Good Morning, Jojo</Text>
       <View style={tw`border-t border-gray-200 flex-shrink`}>
         <View>
