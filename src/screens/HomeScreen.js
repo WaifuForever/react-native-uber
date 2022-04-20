@@ -37,6 +37,7 @@ const HomeScreen = () => {
             );
             dispatch(setDestination(null));
           }}
+          minLength={2}
           query={{
             key: GOOGLE_MAPS_KEY,
             language: "en",
