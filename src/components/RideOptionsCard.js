@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import {
   Text,
   SafeAreaView,
@@ -9,7 +9,9 @@ import {
   Image,
 } from "react-native";
 import { Icon } from "react-native-elements";
+import { useSelector } from "react-redux";
 import tw from "tailwind-react-native-classnames";
+import { selectTravelTimeInformation } from "../slices/navSlice";
 
 const data = [
   {
@@ -27,18 +29,24 @@ const data = [
   {
     id: "uber-X-789",
     title: "Uber LUX",
-    multiplier: 1,
+    multiplier: 1.75,
     image: "https://links.papareact.com/7pf",
   },
 ];
 
+const SURGE_CHARGE_RATE = 1.5;
+
 const RideOptionsCard = () => {
   const [selected, setSelected] = useState(null);
   const navigation = useNavigation();
+  const travelTimeInformation = useSelector(selectTravelTimeInformation);
+
   return (
     <SafeAreaView style={tw`bg-white flex-grow`}>
       <View>
-        <Text style={tw`text-center py-5 text-xl`}>Select a Ride</Text>
+        <Text style={tw`text-center py-5 text-xl`}>
+          Select a Ride - {travelTimeInformation?.distance.text}
+        </Text>
         <TouchableOpacity
           style={tw`absolute top-3 left-5 p-3 rounded-full`}
           onPress={() => {
@@ -65,15 +73,23 @@ const RideOptionsCard = () => {
               style={{ width: 100, height: 100, resizeMode: "contain" }}
               source={{ uri: item.image }}
             />
-            <View style={tw`-ml-6`}>
+            <View style={tw`-ml-6 mx-1`}>
               <Text style={tw`text-xl font-semibold`}>{item.title}</Text>
-              <Text>Travel time...</Text>
+              <Text>{travelTimeInformation?.duration.text}</Text>
             </View>
-            <Text style={tw`text-xl`}>$99</Text>
+            <Text style={tw`text-xl`}>
+              US${" "}
+              {(
+                (travelTimeInformation?.duration.value *
+                  SURGE_CHARGE_RATE *
+                  item.multiplier) /
+                100
+              ).toFixed(2)}
+            </Text>
           </TouchableOpacity>
         )}
       />
-      <View>
+      <View style={tw`mt-auto border-gray-200`}>
         <TouchableOpacity
           disabled={!selected}
           style={tw`bg-black py-3 m-3 ${!selected && "bg-gray-300"}`}
